@@ -102,8 +102,6 @@
       
       <categories>
           
-          <category> 原创栏目 </category>
-          
           <category> 神兵利器 </category>
           
       </categories>
@@ -364,9 +362,9 @@
       
         <tags>
             
-            <tag> SQL注入 </tag>
-            
             <tag> 奇淫技巧 </tag>
+            
+            <tag> SQL注入 </tag>
             
             <tag> D盾 </tag>
             
@@ -418,9 +416,9 @@
             
             <tag> D盾 </tag>
             
-            <tag> webshell </tag>
-            
             <tag> 过狗 </tag>
+            
+            <tag> webshell </tag>
             
         </tags>
       
