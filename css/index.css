@@ -263,7 +263,9 @@ table td {
 }
 #rightside #readmode,
 #rightside #font_plus,
-#rightside #font_minus {
+#rightside #font_minus,
+#rightside #cola,
+#rightside #shutiao {
   width: 30px;
   height: 30px;
   background-color: #49b1f5;
