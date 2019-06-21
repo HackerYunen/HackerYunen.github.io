@@ -394,9 +394,9 @@
       <category term="技术文章" scheme="https://www.0x002.com/categories/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/"/>
     
     
-      <category term="奇淫技巧" scheme="https://www.0x002.com/tags/%E5%A5%87%E6%B7%AB%E6%8A%80%E5%B7%A7/"/>
-    
       <category term="SQL注入" scheme="https://www.0x002.com/tags/SQL%E6%B3%A8%E5%85%A5/"/>
+    
+      <category term="奇淫技巧" scheme="https://www.0x002.com/tags/%E5%A5%87%E6%B7%AB%E6%8A%80%E5%B7%A7/"/>
     
       <category term="D盾" scheme="https://www.0x002.com/tags/D%E7%9B%BE/"/>
     
@@ -448,11 +448,11 @@
     
       <category term="奇淫技巧" scheme="https://www.0x002.com/tags/%E5%A5%87%E6%B7%AB%E6%8A%80%E5%B7%A7/"/>
     
+      <category term="webshell" scheme="https://www.0x002.com/tags/webshell/"/>
+    
       <category term="D盾" scheme="https://www.0x002.com/tags/D%E7%9B%BE/"/>
     
       <category term="过狗" scheme="https://www.0x002.com/tags/%E8%BF%87%E7%8B%97/"/>
-    
-      <category term="webshell" scheme="https://www.0x002.com/tags/webshell/"/>
     
   </entry>
   
