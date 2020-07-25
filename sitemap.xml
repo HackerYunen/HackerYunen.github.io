@@ -2,6 +2,27 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://www.0x002.com/about/index.html</loc>
+    
+    <lastmod>2020-07-25T17:25:08.170Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.0x002.com/2020/%25E7%2599%25BE%25E9%2581%2593CTF%25E5%2588%25B7%25E9%25A2%2598%25E8%25AE%25B0%25E5%25BD%2595(%25E4%25BA%258C)%25E4%25B9%258BBUUCTF/</loc>
+    
+    <lastmod>2020-07-25T17:20:28.611Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.0x002.com/2019/%25E7%2599%25BE%25E9%2581%2593CTF%25E5%2588%25B7%25E9%25A2%2598%25E8%25AE%25B0%25E5%25BD%2595(%25E4%25B8%2580)%25E4%25B9%258B%25E5%25AE%259E%25E9%25AA%258C%25E5%2590%25A7/</loc>
+    
+    <lastmod>2020-07-25T17:02:36.358Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://www.0x002.com/2020/Android%25207.0+%25E4%25BD%25BF%25E7%2594%25A8VirtualXposed+Charles%25E8%25BF%259B%25E8%25A1%258C%25E6%258A%2593%25E5%258C%2585/</loc>
     
     <lastmod>2020-07-22T20:44:22.030Z</lastmod>
@@ -26,13 +47,6 @@
     <loc>https://www.0x002.com/2020/%25E5%25AF%25B9MYSQL%25E6%25B3%25A8%25E5%2585%25A5%25E7%259B%25B8%25E5%2585%25B3%25E5%2586%2585%25E5%25AE%25B9%25E5%258F%258A%25E9%2583%25A8%25E5%2588%2586Trick%25E7%259A%2584%25E5%25BD%2592%25E7%25B1%25BB%25E5%25B0%258F%25E7%25BB%2593/</loc>
     
     <lastmod>2020-06-23T06:04:34.106Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.0x002.com/about/index.html</loc>
-    
-    <lastmod>2020-02-07T21:42:13.431Z</lastmod>
     
   </url>
   
@@ -145,13 +159,6 @@
     <loc>https://www.0x002.com/2019/SQL%25E6%25B3%25A8%25E5%2585%25A5%25E4%25BD%25BF%25E7%2594%25A8Django%25E4%25B8%25AD%25E7%25BB%25A7%25E6%2595%25B0%25E6%258D%25AE%25E5%258C%2585bypassWAF/</loc>
     
     <lastmod>2019-06-17T16:12:18.683Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.0x002.com/2019/%25E7%2599%25BE%25E9%2581%2593CTF%25E5%2588%25B7%25E9%25A2%2598%25E8%25AE%25B0%25E5%25BD%2595(%25E4%25B8%2580)/</loc>
-    
-    <lastmod>2019-06-17T16:09:18.299Z</lastmod>
     
   </url>
   
