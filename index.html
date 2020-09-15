@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Yunen's Blog - Focus On Web Safety!</title><meta name="description" content="Just A Websafe Lover!"><meta name="author" content="Yunen"><meta name="copyright" content="Yunen"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="https://www.0x002.com/"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin="crossorigin"/><meta property="og:type" content="website"><meta property="og:title" content="Yunen's Blog"><meta property="og:url" content="https://www.0x002.com/"><meta property="og:site_name" content="Yunen's Blog"><meta property="og:description" content="Just A Websafe Lover!"><meta property="og:image" content="https://img.0x002.com/avatar.jpg"><meta property="article:published_time" content="2020-09-15T13:36:14.828Z"><meta property="article:modified_time" content="2020-09-15T13:36:14.828Z"><meta name="twitter:card" content="summary"><script>var activateDarkMode = function () {
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Yunen's Blog - Focus On Web Safety!</title><meta name="description" content="Just A Websafe Lover!"><meta name="author" content="Yunen"><meta name="copyright" content="Yunen"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="https://www.0x002.com/"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin="crossorigin"/><meta property="og:type" content="website"><meta property="og:title" content="Yunen's Blog"><meta property="og:url" content="https://www.0x002.com/"><meta property="og:site_name" content="Yunen's Blog"><meta property="og:description" content="Just A Websafe Lover!"><meta property="og:image" content="https://img.0x002.com/avatar.jpg"><meta property="article:published_time" content="2020-09-15T16:10:43.837Z"><meta property="article:modified_time" content="2020-09-15T16:10:43.837Z"><meta name="twitter:card" content="summary"><script>var activateDarkMode = function () {
   document.documentElement.setAttribute('data-theme', 'dark')
   if (document.querySelector('meta[name="theme-color"]') !== null) {
     document.querySelector('meta[name="theme-color"]').setAttribute('content', '#000')
@@ -96,7 +96,7 @@ if (autoChangeMode === '1') {
   isHome: true,
   isHighlightShrink: false,
   isSidebar: false,
-  postUpdate: '2020-09-15 21:36:14'
+  postUpdate: '2020-09-16 00:10:43'
 }</script><noscript><style>
 #nav {
   opacity: 1
@@ -110,15 +110,15 @@ flask题目告诉了web框架是flask，故开题直接老规矩，寻找SSTI。
 
 寻找404页面：
 
-发现页面会将地址信息填充到页面内，直接49尝试，如果返回49则代表此处极有可能存在SSTI漏洞。
+发现页面会将地址信息填充到页面内，直接{{ 7*7 }}尝试，如果返回49则代表此处极有可能存在SSTI漏洞。
 
 BINGO。接下来尝试从基类寻找危险函数了。
 在此过程中发现题目存在WAF，对于存在下划线_与点号.的URL会被WAF拦截。
 对于下划线我们可以通过请求代换给他去掉，如
 123POST &#x2F;&#123;&#123; &quot;&quot;[request[&quot;values&quot;][&quot;class&quot;]] &#125;&#125;class&#x3D;__class__
-上述payload相当于：
+上述payload在flask环境下相当于：
 1GET &#x2F;&#123;&#123; &quot;&quot;.__class__ &#125;&#125;
-寻找可用的类（通过Burp的Intruder ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2020/%E5%AF%B9RSA%E5%8A%A0%E5%AF%86%E5%8E%9F%E7%90%86%E5%8F%8A%E5%85%B6%E5%BA%94%E7%94%A8%E7%9A%84%E7%AE%80%E5%8D%95%E7%A0%94%E7%A9%B6/" title="对RSA加密原理及其应用的简单研究">     <img class="post_bg" data-src="https://img.0x002.com/article/rsa/cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="对RSA加密原理及其应用的简单研究"></a></div><div class="recent-post-info"><a class="article-title" href="/2020/%E5%AF%B9RSA%E5%8A%A0%E5%AF%86%E5%8E%9F%E7%90%86%E5%8F%8A%E5%85%B6%E5%BA%94%E7%94%A8%E7%9A%84%E7%AE%80%E5%8D%95%E7%A0%94%E7%A9%B6/" title="对RSA加密原理及其应用的简单研究">对RSA加密原理及其应用的简单研究</a><div class="article-meta-wrap"><time class="post-meta__date" title="发表于 2020-09-09 13:00:00"><i class="far fa-calendar-alt"></i>2020-09-09</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E5%8E%9F%E5%88%9B%E6%A0%8F%E7%9B%AE/">原创栏目</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/RSA/">RSA</a></span></div><div class="content">前言又是打CTF遇到的考点，也不是啥新鲜玩意了，这东西属于密码学的范畴，不过却是学信安的同学必须掌握的内容。今天就来打算好好学学这RSA究竟是个怎样的东西，让CTF考了这么多遍至今仍是一道频率极高的考点。
+寻找可用的类 ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2020/%E5%AF%B9RSA%E5%8A%A0%E5%AF%86%E5%8E%9F%E7%90%86%E5%8F%8A%E5%85%B6%E5%BA%94%E7%94%A8%E7%9A%84%E7%AE%80%E5%8D%95%E7%A0%94%E7%A9%B6/" title="对RSA加密原理及其应用的简单研究">     <img class="post_bg" data-src="https://img.0x002.com/article/rsa/cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="对RSA加密原理及其应用的简单研究"></a></div><div class="recent-post-info"><a class="article-title" href="/2020/%E5%AF%B9RSA%E5%8A%A0%E5%AF%86%E5%8E%9F%E7%90%86%E5%8F%8A%E5%85%B6%E5%BA%94%E7%94%A8%E7%9A%84%E7%AE%80%E5%8D%95%E7%A0%94%E7%A9%B6/" title="对RSA加密原理及其应用的简单研究">对RSA加密原理及其应用的简单研究</a><div class="article-meta-wrap"><time class="post-meta__date" title="发表于 2020-09-09 13:00:00"><i class="far fa-calendar-alt"></i>2020-09-09</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E5%8E%9F%E5%88%9B%E6%A0%8F%E7%9B%AE/">原创栏目</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag article-meta__icon"></i><a class="article-meta__tags" href="/tags/RSA/">RSA</a></span></div><div class="content">前言又是打CTF遇到的考点，也不是啥新鲜玩意了，这东西属于密码学的范畴，不过却是学信安的同学必须掌握的内容。今天就来打算好好学学这RSA究竟是个怎样的东西，让CTF考了这么多遍至今仍是一道频率极高的考点。
 正文我们都知道，对于数字届来说，质数无遗是一种十分特殊的存在。他不会被除了1和他自身之外的正整数给整除，即他的因子只有1和他自己。而以目前的计算机算力来说，对于一个由两个1024位长的质数相乘得到的整数，想要反求他是由哪两个质数相乘而来实在困难重重。根据这一特性，RSA加密算法应运而生。
 数学基础想要弄清楚RSA加密原理，就不得不提到一位数学家——欧拉。
 这里主要围绕他最经典的欧拉定理来展开
