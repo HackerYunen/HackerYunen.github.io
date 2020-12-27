@@ -32,7 +32,7 @@
     findNightNav();
 
     let h = (new Date()).getHours();
-    if ((h >= 18 || h <= 6) && (isNight == undefined || isNight.toString() !== 'true')) {
+    if ((isNight == undefined) && (h >= 18 || h <= 6)) {
         switchNight();
     }else {
         isNight && applyNight(isNight);
