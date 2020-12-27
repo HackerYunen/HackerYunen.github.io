@@ -270,27 +270,6 @@
   </url>
   
   <url>
-    <loc>https://www.0x002.com/tags/Django/</loc>
-    <lastmod>2020-12-27</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.0x002.com/tags/JWT/</loc>
-    <lastmod>2020-12-27</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.0x002.com/tags/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F/</loc>
-    <lastmod>2020-12-27</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://www.0x002.com/tags/PHP/</loc>
     <lastmod>2020-12-27</lastmod>
     <changefreq>daily</changefreq>
@@ -306,6 +285,27 @@
   
   <url>
     <loc>https://www.0x002.com/tags/%E6%9C%AC%E5%9C%B0%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E/</loc>
+    <lastmod>2020-12-27</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.0x002.com/tags/Django/</loc>
+    <lastmod>2020-12-27</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.0x002.com/tags/JWT/</loc>
+    <lastmod>2020-12-27</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.0x002.com/tags/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F/</loc>
     <lastmod>2020-12-27</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>

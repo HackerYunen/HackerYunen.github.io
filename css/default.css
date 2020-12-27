@@ -11649,6 +11649,10 @@ figure.highlight .section {
     padding: 1.5rem 1rem;
   }
 }
+div[data-type="toc"] {
+  position: sticky;
+  top: 1.5rem;
+}
 #universe {
   display: none;
 }
