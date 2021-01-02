@@ -2,6 +2,9 @@ div[data-type="toc"] {
   position: sticky;
   top: 1.5rem;
 }
+.breadcrumb .is-active a {
+  color: inherit !important;
+}
 #universe {
   display: none;
 }
